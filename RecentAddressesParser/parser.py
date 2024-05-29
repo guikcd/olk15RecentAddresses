@@ -26,12 +26,12 @@ class Parser(object):
     def grouper(self, n, iterable, fillvalue=None):
         "grouper(8, ['AB','CD','FG'], 'x') --> ABC DEF Gxx"
         args = [iter(iterable)] * n
-        return itertools.izip_longest(*args, fillvalue=fillvalue)
+        return itertools.zip_longest(*args, fillvalue=fillvalue)
 
     def go(self):
 
         with open(self.filename, 'rb') as fp:
-            hex_list = ["{:02x}".format(ord(c)) for c in fp.read()]
+            hex_list = ["{:02x}".format(c) for c in fp.read()]
 
             email_indeces = [self.start_of_email_index]
             first_index_byte_index = 0
@@ -55,7 +55,7 @@ class Parser(object):
                 try:
                     int_val = struct.unpack("<h", hex_rep)[0]
                 except Exception as e:
-                    print "Error processing group %s: %s" % (hex_rep, e)
+                    print("Error processing group %s: %s" % (hex_rep, e))
                     int_val = -1
                     continue
 
@@ -71,8 +71,8 @@ class Parser(object):
             # to self.end_of_email
             emails_hex = []
             for i, index in enumerate(email_indeces):
-                print i
-                print index
+                print(i)
+                print(index)
                 if i == len(email_indeces) - 1:
                     break
                 emails_hex.append(hex_list[index:email_indeces[i+1]])
@@ -80,7 +80,7 @@ class Parser(object):
             emails = [binascii.unhexlify(''.join(item)) for item in emails_hex]
 
             for email in emails:
-                print email
+                print(email)
 
             # email_map_start_index = ascii_file.find(
             #     self.email_index_separator,
